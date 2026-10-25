@@ -52,7 +52,17 @@ With PlantUML Interactive Editor, you can:
 
 - Python 3.10 or newer
 - PlantUML, https://plantuml.com/starting
-- The path to the PlantUML must be set in an .env file, see .env.example
+- The path to the PlantUML jar must be set in `PLANTUML_JAR`, or in an .env file, see .env.example
+
+
+## Running a release with uvx
+
+No clone or build needed, uvx runs the wheel of a [release](https://github.com/rdagher/PlantUML-Interactive-Editor/releases):
+
+```
+V=0.31.0
+PLANTUML_JAR=/opt/homebrew/opt/plantuml/libexec/plantuml.jar uvx --from https://github.com/rdagher/PlantUML-Interactive-Editor/releases/download/v$V/plantuml_gui-$V-py3-none-any.whl plantuml-gui
+```
 
 
 ## Installing and running the server

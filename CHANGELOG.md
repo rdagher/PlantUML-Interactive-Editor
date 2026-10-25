@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Fixed interactive editing of a sequence-diagram participant whose label is broken over several lines (`participant "a\nb" as ab`): renaming and deleting it did nothing, "add participant left/right" inserted at the end of the file, and hovering it highlighted no editor line. Renaming another participant *to* a multi-line name now works too.
 - The participant rename field now accepts multi-line names: Enter inserts a line break, saved as the `\n` escape PlantUML draws as a broken label (`participant "New\nName" as NewName`). Ctrl+Enter submits.
 - Fixed adding a participant box around an implicitly-declared participant (one introduced by a message, with no `participant` line): it previously produced broken PlantUML with `end box` above `@startuml` and `box` before `@enduml`. The box gesture now reports a clear message asking you to declare the participant on its own line first.
+- Added the `plantuml-gui` command. Each release's wheel runs with `uvx`, no clone or build needed (see README).
 
 ### Internal
 
