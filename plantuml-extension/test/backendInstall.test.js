@@ -215,8 +215,8 @@ suite('backendInstall: the bundled wheel', () => {
 	});
 
 	test('reads a three-component version too', () => {
-		// An extension-only patch release leaves the backend at major.minor,
-		// but nothing stops the backend having a patch of its own.
+		// Releases up to 0.31 had two; the backend now carries the
+		// extension's major.minor.patch.
 		const dir = extensionWith(['plantuml_gui-0.31.2-py3-none-any.whl']);
 
 		assert.strictEqual(bundledWheel(dir).version, '0.31.2');

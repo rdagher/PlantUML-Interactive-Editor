@@ -45,7 +45,7 @@ from check_app_versions import VersionCheckError, check_app_versions  # noqa: E4
 def _write_fixture(
     tmp_path: Path,
     *,
-    backend_version: str = "0.31",
+    backend_version: str = "0.31.0",
     extension_version: str = "0.31.0",
 ) -> tuple[Path, Path]:
     """Write an __about__.py/package.json pair to tmp_path."""
@@ -67,26 +67,26 @@ class TestCheckAppVersions:
 
         message = check_app_versions(about_path, package_json_path)
 
-        assert "0.31" in message
         assert "0.31.0" in message
 
-    def test_extension_patch_component_is_free(self, tmp_path):
-        # An extension-only fix may ship without a backend release.
+    def test_patch_component_must_agree(self, tmp_path):
+        # An extension-only fix bumps the backend too.
         about_path, package_json_path = _write_fixture(
             tmp_path, extension_version="0.31.4"
         )
 
-        assert check_app_versions(about_path, package_json_path)
+        with pytest.raises(VersionCheckError):
+            check_app_versions(about_path, package_json_path)
 
     def test_reports_mismatch(self, tmp_path):
         about_path, package_json_path = _write_fixture(
-            tmp_path, backend_version="0.32", extension_version="0.31.0"
+            tmp_path, backend_version="0.32.0", extension_version="0.31.0"
         )
 
         with pytest.raises(VersionCheckError) as error:
             check_app_versions(about_path, package_json_path)
 
-        assert "0.32" in str(error.value)
+        assert "0.32.0" in str(error.value)
         assert "0.31.0" in str(error.value)
 
     def test_against_the_real_repo_files(self):
@@ -111,7 +111,7 @@ class TestCheckAppVersions:
 
     def test_missing_extension_version_raises(self, tmp_path):
         about_path = tmp_path / "__about__.py"
-        about_path.write_text('__version__ = "0.31"\n', encoding="utf-8")
+        about_path.write_text('__version__ = "0.31.0"\n', encoding="utf-8")
         package_json_path = tmp_path / "package.json"
         package_json_path.write_text(json.dumps({"name": "fixture"}), encoding="utf-8")
 
