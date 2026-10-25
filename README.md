@@ -61,7 +61,7 @@ No clone or build needed, uvx runs the wheel of a [release](https://github.com/r
 
 ```
 V=0.31.0
-PLANTUML_JAR=/opt/homebrew/opt/plantuml/libexec/plantuml.jar uvx --from https://github.com/rdagher/PlantUML-Interactive-Editor/releases/download/v$V/plantuml_gui-$V-py3-none-any.whl plantuml-gui
+PLANTUML_JAR=/opt/homebrew/opt/plantuml/libexec/plantuml.jar uvx https://github.com/rdagher/PlantUML-Interactive-Editor/releases/download/v$V/plantuml_gui-$V-py3-none-any.whl
 ```
 
 
