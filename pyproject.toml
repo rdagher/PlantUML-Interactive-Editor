@@ -30,6 +30,9 @@ readme = "README.md"
 requires-python = ">=3.10"
 dynamic = ["version"]
 
+[project.scripts]
+plantuml-gui = "plantuml_gui.__main__:main"
+
 [project.urls]
 Documentation = "https://github.com/Ericsson/PlantUML-Interactive-Editor#readme"
 Issues = "https://github.com/Ericsson/PlantUML-Interactive-Editor/issues"

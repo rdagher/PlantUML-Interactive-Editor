@@ -25,5 +25,11 @@
 
 from .app import app
 
-if __name__ == "__main__":
+
+def main() -> None:
+    """Run the web app; the `plantuml-gui` command and `python -m plantuml_gui`."""
     app.run(debug=True)
+
+
+if __name__ == "__main__":
+    main()
