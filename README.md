@@ -60,7 +60,7 @@ With PlantUML Interactive Editor, you can:
 No clone or build needed, uvx runs the wheel of a [release](https://github.com/rdagher/PlantUML-Interactive-Editor/releases):
 
 ```
-PLANTUML_JAR=/opt/homebrew/opt/plantuml/libexec/plantuml.jar uvx --from https://github.com/rdagher/PlantUML-Interactive-Editor/releases/download/v0.31.0/plantuml_gui-0.31-py3-none-any.whl plantuml-gui
+PLANTUML_JAR=/opt/homebrew/opt/plantuml/libexec/plantuml.jar uvx https://github.com/rdagher/PlantUML-Interactive-Editor/releases/download/v0.31.0/plantuml_gui-0.31-py3-none-any.whl
 ```
 
 
