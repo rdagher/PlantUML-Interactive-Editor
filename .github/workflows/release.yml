@@ -1,0 +1,60 @@
+name: Release
+
+# A vX.Y.Z tag equal to __about__.py's version builds the release with
+# scripts/build_release.sh and publishes the vsix and the wheel, with that
+# version's CHANGELOG.md sections as notes.
+
+on:
+  push:
+    tags: ["v[0-9]+.[0-9]+.[0-9]+"]
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v7
+
+    - name: Set up Python
+      uses: actions/setup-python@v7
+      with:
+        python-version: "3.13"
+
+    - name: Set up Node
+      uses: actions/setup-node@v7
+      with:
+        node-version: "24"
+
+    - name: Install uv
+      run: python -m pip install uv==0.12.3
+
+    - name: Check the tag matches the version
+      run: |
+        python scripts/check_app_versions.py
+        version=$(sed -n 's/^__version__ = "\(.*\)"$/\1/p' src/plantuml_gui/__about__.py)
+        [[ v$version == "$GITHUB_REF_NAME" ]] || { echo "::error::tag $GITHUB_REF_NAME is not __about__.py's version $version"; exit 1; }
+
+    - name: Extract the release notes
+      run: |
+        section() { awk -v h="## [${GITHUB_REF_NAME#v}]" '/^## \[/ { if (on) exit; on = index($0, h) == 1; next } on' "$1"; }
+        section CHANGELOG.md > "$RUNNER_TEMP/notes.md"
+        [[ -s $RUNNER_TEMP/notes.md ]] || { echo "::error::CHANGELOG.md has no [${GITHUB_REF_NAME#v}] section"; exit 1; }
+        extension=$(section plantuml-extension/CHANGELOG.md)
+        [[ -z $extension ]] || printf '\n### VS Code extension\n%s\n' "$extension" >> "$RUNNER_TEMP/notes.md"
+
+    - name: Build
+      run: scripts/build_release.sh
+
+    - name: Release
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        v=${GITHUB_REF_NAME#v}
+        gh release create "$GITHUB_REF_NAME" --verify-tag --notes-file "$RUNNER_TEMP/notes.md" \
+          "plantuml-extension/plantuml-editor-$v.vsix" "plantuml-extension/backend/plantuml_gui-$v-py3-none-any.whl"

@@ -29,6 +29,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Removed leftover module-level debug prints from `shared/puml_encoder.py`.
 - Added `src/plantuml_gui/serve.py`, an alternative entry point that runs the Flask app on an ephemeral port and announces it as `PLANTUML_GUI_PORT=<n>` on stdout, with optional `PLANTUML_GUI_TOKEN` auth, permissive CORS, and a `PLANTUML_GUI_JAR_OVERRIDE` applied after `render.py`'s `load_dotenv`. Unlike `python -m plantuml_gui` (fixed port 5000, reloader), it is safe to run as a managed child process. Covered by `tests/shared/test_serve.py`.
 - The backend and the extension now carry the same `major.minor.patch` (`0.31` is now `0.31.0`), bumped together. `scripts/check_app_versions.py` and the extension's runtime check compare whole versions.
+- Added `.github/workflows/release.yml`: a `vX.Y.Z` tag equal to `__about__.py`'s version builds with `scripts/build_release.sh` and publishes the vsix and the wheel, with that version's CHANGELOG sections as notes.
 
 ## [0.31] - 2026-07-22
 
