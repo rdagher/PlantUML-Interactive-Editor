@@ -1,0 +1,48 @@
+name: Release
+
+# A vX.Y.Z tag builds the release with scripts/build_release.sh and attaches the
+# vsix and the wheel to a GitHub release, from where uvx runs the wheel.
+
+on:
+  push:
+    tags: ["v[0-9]+.[0-9]+.[0-9]+"]
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.13"
+
+    - name: Set up Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: "24"
+
+    - name: Install uv
+      run: python -m pip install uv==0.12.3
+
+    - name: Check the tag matches the versions
+      run: |
+        python scripts/check_app_versions.py
+        version=$(node -p "require('./plantuml-extension/package.json').version")
+        [[ v$version == "$GITHUB_REF_NAME" ]] || { echo "::error::tag $GITHUB_REF_NAME is not the extension's version $version"; exit 1; }
+
+    - name: Build
+      run: scripts/build_release.sh
+
+    - name: Release
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: gh release create "$GITHUB_REF_NAME" --verify-tag --generate-notes plantuml-extension/plantuml-editor-*.vsix plantuml-extension/backend/plantuml_gui-*.whl
